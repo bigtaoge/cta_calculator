@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>冠脉CTA及胸痛三联流量流速计算程序</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* 平板设备适配 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+        }
+
+        /* 手机设备适配 */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                margin: 5px;
+                padding: 15px;
+                border-radius: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 20px;
+                line-height: 1.2;
+            }
+            
+            .form-section {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .section-title {
+                font-size: 1.1em;
+            }
+            
+            input, select {
+                padding: 10px 12px;
+                font-size: 16px; /* 防止iOS缩放 */
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+            
+            .results {
+                padding: 15px;
+            }
+            
+            .result-item {
+                padding: 12px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .result-value {
+                font-size: 1.1em;
+            }
+            
+            .designer {
+                margin-top: 20px;
+                padding: 15px;
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            min-width: 0; /* 防止flex项目溢出 */
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .results {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+            margin-top: 25px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            word-wrap: break-word;
+        }
+
+        .result-label {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .result-value {
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin-top: 15px;
+        }
+
+        .normal {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            margin-top: 15px;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .calc-type {
+            background: #e8f0fe;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #1565c0;
+        }
+
+        .designer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            border-top: 3px solid #667eea;
+        }
+
+        .designer-text {
+            color: #2c3e50;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .designer-name {
+            color: #667eea;
+            font-size: 1.2em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>冠脉CTA及胸痛三联流量流速计算程序</h1>
+        
+        <div class="form-section">
+            <h2 class="section-title">患者信息</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="height">身高 (cm)</label>
+                    <input type="number" id="height" placeholder="请输入身高" min="100" max="250" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="weight">体重 (kg)</label>
+                    <input type="number" id="weight" placeholder="请输入体重" min="20" max="200" step="0.1">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="heartRate">心率范围</label>
+                    <select id="heartRate">
+                        <option value="80">≤80 次/分</option>
+                        <option value="81">>80 次/分</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="examType">检查类型</label>
+                    <select id="examType">
+                        <option value="coronary">冠脉CTA</option>
+                        <option value="triple">胸痛三联</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="calculate()">计算结果</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2 class="section-title">计算结果</h2>
+            <div id="calculationResults"></div>
+        </div>
+
+        <div class="designer">
+            <div class="designer-text">程序设计者</div>
+            <div class="designer-name">影像涛哥</div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const heartRate = parseInt(document.getElementById('heartRate').value);
+            const examType = document.getElementById('examType').value;
+
+            // 验证输入
+            if (!height || !weight || !heartRate) {
+                alert('请填写完整的患者信息');
+                return;
+            }
+
+            if (height < 100 || height > 250) {
+                alert('身高范围应在100-250cm之间');
+                return;
+            }
+
+            if (weight < 20 || weight > 200) {
+                alert('体重范围应在20-200kg之间');
+                return;
+            }
+
+            // 计算BMI
+            const bmi = weight / Math.pow(height / 100, 2);
+            
+            // 计算对比剂用量和流速
+            let contrastVolume, flowRate, adjustedVolume = 0;
+            
+            if (examType === 'coronary') {
+                // 冠脉CTA计算
+                if (heartRate <= 80) {
+                    contrastVolume = weight * 0.8;
+                } else {
+                    contrastVolume = weight * 0.85;
+                }
+                flowRate = contrastVolume / 12;
+            } else {
+                // 胸痛三联计算
+                if (heartRate <= 80) {
+                    contrastVolume = weight * 0.8 + 15;
+                } else {
+                    contrastVolume = weight * 0.85 + 15;
+                }
+                flowRate = (contrastVolume - 15) / 12; // 按照冠脉CTA的方式计算流速
+            }
+
+            // 流速安全限制：最大5.0ml/s
+            let theoreticalFlowRate = flowRate; // 保存理论流速用于显示
+            if (flowRate > 5.0) {
+                // 流速超过5.0ml/s时，按5.0ml/s执行，并增加5-10ml造影剂
+                flowRate = 5.0; // 实际执行流速限制为5.0ml/s
+                
+                // 增加5-10ml造影剂（根据超出程度决定增加量）
+                let excessFlowRate = theoreticalFlowRate - 5.0;
+                if (excessFlowRate <= 1.0) {
+                    adjustedVolume = 5; // 轻微超出，增加5ml
+                } else if (excessFlowRate <= 2.0) {
+                    adjustedVolume = 7; // 中等超出，增加7ml
+                } else {
+                    adjustedVolume = 10; // 严重超出，增加10ml
+                }
+                
+                contrastVolume += adjustedVolume;
+            }
+
+            // 显示结果
+            displayResults(height, weight, heartRate, bmi, contrastVolume, flowRate, examType, adjustedVolume, theoreticalFlowRate);
+        }
+
+        function displayResults(height, weight, heartRate, bmi, contrastVolume, flowRate, examType, adjustedVolume = 0, theoreticalFlowRate = 0) {
+            const resultsDiv = document.getElementById('results');
+            const resultsContent = document.getElementById('calculationResults');
+            
+            // BMI评估
+            let bmiStatus = '';
+            let bmiClass = '';
+            if (bmi < 18.5) {
+                bmiStatus = '偏瘦';
+                bmiClass = 'warning';
+            } else if (bmi < 24) {
+                bmiStatus = '正常';
+                bmiClass = 'normal';
+            } else if (bmi < 28) {
+                bmiStatus = '超重';
+                bmiClass = 'warning';
+            } else {
+                bmiStatus = '肥胖';
+                bmiClass = 'warning';
+            }
+
+            const examTypeText = examType === 'coronary' ? '冠脉CTA' : '胸痛三联';
+            const heartRateText = heartRate <= 80 ? '≤80 次/分' : '>80 次/分';
+            
+            // 流速安全提示
+            let flowRateWarning = '';
+            let flowRateDisplay = '';
+            
+            if (adjustedVolume > 0) {
+                flowRateWarning = `
+                    <div class="warning">
+                        <strong>安全提示：</strong>理论流速${theoreticalFlowRate.toFixed(2)}ml/s超过5.0ml/s的安全限制，实际执行流速调整为5.0ml/s，并增加${adjustedVolume}ml造影剂。
+                    </div>
+                `;
+                flowRateDisplay = `
+                    <div class="result-item">
+                        <span class="result-label">理论流速</span>
+                        <span class="result-value" style="color: #dc3545;">${theoreticalFlowRate.toFixed(2)} ml/s</span>
+                    </div>
+                `;
+            }
+            
+            resultsContent.innerHTML = `
+                <div class="calc-type">检查类型：${examTypeText}</div>
+                
+                <div class="result-item">
+                    <span class="result-label">BMI指数</span>
+                    <span class="result-value">${bmi.toFixed(2)}</span>
+                </div>
+                <div class="${bmiClass}">
+                    BMI评估：${bmiStatus}
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">心率范围</span>
+                    <span class="result-value">${heartRateText}</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">对比剂总量</span>
+                    <span class="result-value">${contrastVolume.toFixed(1)} ml</span>
+                </div>
+                
+                ${flowRateDisplay}
+                
+                <div class="result-item">
+                    <span class="result-label">${adjustedVolume > 0 ? '实际执行流速' : '注射流速'}</span>
+                    <span class="result-value">${flowRate.toFixed(2)} ml/s</span>
+                </div>
+                
+                ${flowRateWarning}
+                
+                <div class="normal">
+                    <strong>计算说明：</strong><br>
+                    ${examType === 'coronary' ? 
+                        (heartRate <= 80 ? 
+                            '• 冠脉CTA：心率≤80，药量 = 体重×0.8' : 
+                            '• 冠脉CTA：心率>80，药量 = 体重×0.85') :
+                        (heartRate <= 80 ? 
+                            '• 胸痛三联：心率≤80，药量 = 体重×0.8+15ml' : 
+                            '• 胸痛三联：心率>80，药量 = 体重×0.85+15ml')
+                    }<br>
+                    • 流速计算：${examType === 'coronary' ? '药量÷12' : '(药量-15)÷12'}<br>
+                    • 安全限制：理论流速>5.0ml/s时，实际执行流速=5.0ml/s，并增加5-10ml造影剂
+                    ${adjustedVolume > 0 ? `<br>• 本次调整：理论流速${theoreticalFlowRate.toFixed(2)}ml/s → 实际执行5.0ml/s，增加${adjustedVolume}ml造影剂` : ''}
+                </div>
+            `;
+            
+            resultsDiv.classList.add('show');
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 输入验证
+        document.getElementById('height').addEventListener('input', function() {
+            if (this.value < 0) this.value = '';
+        });
+
+        document.getElementById('weight').addEventListener('input', function() {
+            if (this.value < 0) this.value = '';
+        });
+
+        // 回车键触发计算
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculate();
+            }
+        });
+    </script>
+</body>
+</html>
