@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>冠脉CTA及胸痛三联流量流速计算程序</title>
+    <title>影像学参数计算工具</title>
     <style>
         * {
             margin: 0;
@@ -13,200 +13,133 @@
 
         body {
             font-family: 'Microsoft YaHei', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
+            font-size: 14px;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 375px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
-        }
-
-        /* 平板设备适配 */
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                padding: 20px;
-                border-radius: 15px;
-            }
-            
-            h1 {
-                font-size: 1.8em;
-                margin-bottom: 20px;
-            }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .form-section {
-                padding: 20px;
-            }
-        }
-
-        /* 手机设备适配 */
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            
-            .container {
-                margin: 5px;
-                padding: 15px;
-                border-radius: 10px;
-            }
-            
-            h1 {
-                font-size: 1.5em;
-                margin-bottom: 20px;
-                line-height: 1.2;
-            }
-            
-            .form-section {
-                padding: 15px;
-                margin-bottom: 15px;
-            }
-            
-            .section-title {
-                font-size: 1.1em;
-            }
-            
-            input, select {
-                padding: 10px 12px;
-                font-size: 16px; /* 防止iOS缩放 */
-            }
-            
-            .btn {
-                padding: 12px 20px;
-                font-size: 1em;
-            }
-            
-            .results {
-                padding: 15px;
-            }
-            
-            .result-item {
-                padding: 12px;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            
-            .result-value {
-                font-size: 1.1em;
-            }
-            
-            .designer {
-                margin-top: 20px;
-                padding: 15px;
-            }
-            
-            .disclaimer {
-                margin-top: 20px;
-                padding: 15px;
-                font-size: 0.9em;
-                line-height: 1.5;
-            }
         }
 
         h1 {
             text-align: center;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            font-size: 2.2em;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #1e293b;
+            margin-bottom: 24px;
+            font-size: 1.4em;
+            font-weight: 600;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
         }
 
         .form-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            border-left: 4px solid #667eea;
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #2c3e50;
-            font-size: 1.1em;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.9em;
         }
 
         input, select {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
             border-radius: 8px;
-            font-size: 1em;
-            transition: all 0.3s ease;
+            font-size: 16px; /* 防止iOS缩放 */
             background: white;
+            transition: all 0.2s ease;
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
         .form-row {
             display: flex;
-            gap: 20px;
+            gap: 12px;
         }
 
         .form-row .form-group {
             flex: 1;
-            min-width: 0; /* 防止flex项目溢出 */
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 12px 24px;
             border-radius: 8px;
-            font-size: 1.1em;
+            font-size: 1em;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 16px;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .results {
-            background: #fff;
-            padding: 25px;
-            border-radius: 15px;
-            border: 2px solid #e0e0e0;
-            margin-top: 25px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            margin-top: 16px;
             display: none;
         }
 
         .results.show {
             display: block;
-            animation: fadeIn 0.5s ease;
+            animation: slideIn 0.3s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -214,168 +147,221 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f8fafc;
             border-radius: 8px;
-            border-left: 4px solid #667eea;
-            word-wrap: break-word;
+            border-left: 3px solid #4f46e5;
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
         }
 
         .result-label {
-            font-weight: bold;
-            color: #2c3e50;
-            font-size: 1.1em;
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.9em;
         }
 
         .result-value {
-            font-size: 1.2em;
-            color: #667eea;
-            font-weight: bold;
+            font-size: 1em;
+            color: #4f46e5;
+            font-weight: 600;
         }
 
         .warning {
-            background: #fff3cd;
-            color: #856404;
-            padding: 15px;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 12px;
             border-radius: 8px;
-            border-left: 4px solid #ffc107;
-            margin-top: 15px;
+            border-left: 3px solid #f59e0b;
+            margin-top: 12px;
+            font-size: 0.85em;
+            line-height: 1.4;
         }
 
         .normal {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
+            background: #d1fae5;
+            color: #065f46;
+            padding: 12px;
             border-radius: 8px;
-            border-left: 4px solid #28a745;
-            margin-top: 15px;
+            border-left: 3px solid #10b981;
+            margin-top: 12px;
+            font-size: 0.85em;
+            line-height: 1.4;
         }
 
         .section-title {
-            color: #2c3e50;
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
+            color: #1e293b;
+            font-size: 1em;
+            margin-bottom: 12px;
+            font-weight: 600;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #4f46e5;
         }
 
         .calc-type {
-            background: #e8f0fe;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-weight: bold;
-            color: #1565c0;
+            background: #ede9fe;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: #5b21b6;
+            font-size: 0.9em;
         }
 
         .designer {
             text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 15px;
-            border-top: 3px solid #667eea;
+            margin-top: 24px;
+            padding: 16px;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border-radius: 12px;
+            border-top: 3px solid #4f46e5;
         }
 
         .designer-text {
-            color: #2c3e50;
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-bottom: 5px;
+            color: #64748b;
+            font-size: 0.9em;
+            font-weight: 500;
+            margin-bottom: 4px;
         }
 
         .designer-name {
-            color: #667eea;
-            font-size: 1.2em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #4f46e5;
+            font-size: 1.1em;
+            font-weight: 600;
         }
 
         .disclaimer {
             text-align: left;
-            margin-top: 30px;
-            padding: 25px;
-            background: #fff8e1;
-            border-radius: 15px;
-            border-left: 4px solid #ff9800;
-            color: #e65100;
-            font-size: 1em;
-            line-height: 1.6;
+            margin-top: 20px;
+            padding: 16px;
+            background: #fef7cd;
+            border-radius: 12px;
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
+            font-size: 0.8em;
+            line-height: 1.5;
         }
 
         .disclaimer h3 {
-            color: #e65100;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
+            color: #92400e;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
         }
 
         .disclaimer p {
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         .disclaimer .highlight {
-            font-weight: bold;
-            color: #d84315;
+            font-weight: 600;
+            color: #b45309;
         }
+
+        /* 学术声明样式 */
+        .academic-notice {
+            background: #e0f2fe;
+            color: #0277bd;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #0288d1;
+            margin-bottom: 16px;
+            font-size: 0.8em;
+            line-height: 1.4;
+        }
+
+        .academic-notice .title {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        /* 输入提示 */
+        .input-hint {
+            color: #64748b;
+            font-size: 0.8em;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+
+        /* 状态指示器 */
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .status-normal { background: #10b981; }
+        .status-warning { background: #f59e0b; }
+        .status-error { background: #ef4444; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>冠脉CTA及胸痛三联流量流速计算程序</h1>
+        <h1>影像学参数计算工具</h1>
+        <div class="subtitle">CTA造影剂用量学术参考</div>
+        
+        <div class="academic-notice">
+            <div class="title">📚 学术研究工具</div>
+            <div>本工具仅供影像学教学、学术研究和培训使用，不得用于临床诊断或治疗决策。</div>
+        </div>
         
         <div class="form-section">
-            <h2 class="section-title">患者信息</h2>
+            <h2 class="section-title">基础参数设置</h2>
             <div class="form-row">
                 <div class="form-group">
                     <label for="height">身高 (cm)</label>
-                    <input type="number" id="height" placeholder="请输入身高" min="100" max="250" step="0.1">
+                    <input type="number" id="height" placeholder="如：170" min="100" max="250" step="0.1">
+                    <div class="input-hint">范围：100-250cm</div>
                 </div>
                 <div class="form-group">
                     <label for="weight">体重 (kg)</label>
-                    <input type="number" id="weight" placeholder="请输入体重" min="20" max="200" step="0.1">
+                    <input type="number" id="weight" placeholder="如：70" min="20" max="200" step="0.1">
+                    <div class="input-hint">范围：20-200kg</div>
                 </div>
             </div>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label for="heartRate">心率范围</label>
+                    <label for="heartRate">心率参数</label>
                     <select id="heartRate">
                         <option value="80">≤80 次/分</option>
                         <option value="81">>80 次/分</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="examType">检查类型</label>
+                    <label for="examType">计算模式</label>
                     <select id="examType">
-                        <option value="coronary">冠脉CTA</option>
-                        <option value="triple">胸痛三联</option>
+                        <option value="coronary">冠脉CTA模式</option>
+                        <option value="triple">胸痛三联模式</option>
                     </select>
                 </div>
             </div>
             
-            <button class="btn" onclick="calculate()">计算结果</button>
+            <button class="btn" onclick="calculate()">📊 计算参考数值</button>
         </div>
 
         <div class="results" id="results">
-            <h2 class="section-title">计算结果</h2>
+            <h2 class="section-title">参考数值</h2>
             <div id="calculationResults"></div>
         </div>
 
         <div class="designer">
-            <div class="designer-text">程序设计者</div>
+            <div class="designer-text">工具开发者</div>
             <div class="designer-name">影像涛哥</div>
         </div>
 
         <div class="disclaimer">
-            <h3>⚠️ 免责声明</h3>
-            <p>本程序专门针对<span class="highlight">联影960+CT</span>做冠脉CTA及胸痛三联时计算造影剂流速流量，数值仅做参考。</p>
-            <p>特殊病人可能不适用，请严格按照规程使用。</p>
-            <p class="highlight">如因个人输入信息不当造成的一切后果自负！</p>
+            <h3>⚠️ 重要声明</h3>
+            <p><span class="highlight">学术用途：</span>本工具专为影像学教学、学术研究和专业培训设计。</p>
+            <p><span class="highlight">设备特定：</span>参数计算基于联影960+CT设备的学术研究数据。</p>
+            <p><span class="highlight">非医疗器械：</span>本工具不属于医疗器械，不得用于临床诊断、治疗或患者护理。</p>
+            <p><span class="highlight">专业使用：</span>仅供具备相关专业知识的研究人员和学者使用。</p>
+            <p class="highlight">使用风险自负，开发者不承担任何直接或间接责任！</p>
         </div>
     </div>
 
@@ -388,7 +374,7 @@
 
             // 验证输入
             if (!height || !weight || !heartRate) {
-                alert('请填写完整的患者信息');
+                alert('请填写完整的参数信息');
                 return;
             }
 
@@ -423,23 +409,21 @@
                 } else {
                     contrastVolume = weight * 0.85 + 15;
                 }
-                flowRate = (contrastVolume - 15) / 12; // 按照冠脉CTA的方式计算流速
+                flowRate = (contrastVolume - 15) / 12;
             }
 
             // 流速安全限制：最大5.0ml/s
-            let theoreticalFlowRate = flowRate; // 保存理论流速用于显示
+            let theoreticalFlowRate = flowRate;
             if (flowRate > 5.0) {
-                // 流速超过5.0ml/s时，按5.0ml/s执行，并增加5-10ml造影剂
-                flowRate = 5.0; // 实际执行流速限制为5.0ml/s
+                flowRate = 5.0;
                 
-                // 增加5-10ml造影剂（根据超出程度决定增加量）
                 let excessFlowRate = theoreticalFlowRate - 5.0;
                 if (excessFlowRate <= 1.0) {
-                    adjustedVolume = 5; // 轻微超出，增加5ml
+                    adjustedVolume = 5;
                 } else if (excessFlowRate <= 2.0) {
-                    adjustedVolume = 7; // 中等超出，增加7ml
+                    adjustedVolume = 7;
                 } else {
-                    adjustedVolume = 10; // 严重超出，增加10ml
+                    adjustedVolume = 10;
                 }
                 
                 contrastVolume += adjustedVolume;
@@ -456,21 +440,27 @@
             // BMI评估
             let bmiStatus = '';
             let bmiClass = '';
+            let statusIndicator = '';
+            
             if (bmi < 18.5) {
                 bmiStatus = '偏瘦';
                 bmiClass = 'warning';
+                statusIndicator = '<span class="status-indicator status-warning"></span>';
             } else if (bmi < 24) {
                 bmiStatus = '正常';
                 bmiClass = 'normal';
+                statusIndicator = '<span class="status-indicator status-normal"></span>';
             } else if (bmi < 28) {
                 bmiStatus = '超重';
                 bmiClass = 'warning';
+                statusIndicator = '<span class="status-indicator status-warning"></span>';
             } else {
                 bmiStatus = '肥胖';
                 bmiClass = 'warning';
+                statusIndicator = '<span class="status-indicator status-warning"></span>';
             }
 
-            const examTypeText = examType === 'coronary' ? '冠脉CTA' : '胸痛三联';
+            const examTypeText = examType === 'coronary' ? '冠脉CTA模式' : '胸痛三联模式';
             const heartRateText = heartRate <= 80 ? '≤80 次/分' : '>80 次/分';
             
             // 流速安全提示
@@ -480,60 +470,60 @@
             if (adjustedVolume > 0) {
                 flowRateWarning = `
                     <div class="warning">
-                        <strong>安全提示：</strong>理论流速${theoreticalFlowRate.toFixed(2)}ml/s超过5.0ml/s的安全限制，实际执行流速调整为5.0ml/s，并增加${adjustedVolume}ml造影剂。
+                        <strong>参数调整提示：</strong>理论流速${theoreticalFlowRate.toFixed(2)}ml/s超过5.0ml/s的参考限制，建议执行流速调整为5.0ml/s，并增加${adjustedVolume}ml造影剂。
                     </div>
                 `;
                 flowRateDisplay = `
                     <div class="result-item">
-                        <span class="result-label">理论流速</span>
-                        <span class="result-value" style="color: #dc3545;">${theoreticalFlowRate.toFixed(2)} ml/s</span>
+                        <span class="result-label">理论流速值</span>
+                        <span class="result-value" style="color: #ef4444;">${theoreticalFlowRate.toFixed(2)} ml/s</span>
                     </div>
                 `;
             }
             
             resultsContent.innerHTML = `
-                <div class="calc-type">检查类型：${examTypeText}</div>
+                <div class="calc-type">计算模式：${examTypeText}</div>
                 
                 <div class="result-item">
                     <span class="result-label">BMI指数</span>
                     <span class="result-value">${bmi.toFixed(2)}</span>
                 </div>
                 <div class="${bmiClass}">
-                    BMI评估：${bmiStatus}
+                    ${statusIndicator}BMI评估：${bmiStatus}
                 </div>
                 
                 <div class="result-item">
-                    <span class="result-label">心率范围</span>
+                    <span class="result-label">心率参数</span>
                     <span class="result-value">${heartRateText}</span>
                 </div>
                 
                 <div class="result-item">
-                    <span class="result-label">对比剂总量</span>
+                    <span class="result-label">造影剂用量</span>
                     <span class="result-value">${contrastVolume.toFixed(1)} ml</span>
                 </div>
                 
                 ${flowRateDisplay}
                 
                 <div class="result-item">
-                    <span class="result-label">${adjustedVolume > 0 ? '实际执行流速' : '注射流速'}</span>
+                    <span class="result-label">${adjustedVolume > 0 ? '建议执行流速' : '注射流速'}</span>
                     <span class="result-value">${flowRate.toFixed(2)} ml/s</span>
                 </div>
                 
                 ${flowRateWarning}
                 
                 <div class="normal">
-                    <strong>计算说明：</strong><br>
+                    <strong>计算原理：</strong><br>
                     ${examType === 'coronary' ? 
                         (heartRate <= 80 ? 
-                            '• 冠脉CTA：心率≤80，药量 = 体重×0.8' : 
-                            '• 冠脉CTA：心率>80，药量 = 体重×0.85') :
+                            '• 冠脉CTA：心率≤80，用量 = 体重×0.8' : 
+                            '• 冠脉CTA：心率>80，用量 = 体重×0.85') :
                         (heartRate <= 80 ? 
-                            '• 胸痛三联：心率≤80，药量 = 体重×0.8+15ml' : 
-                            '• 胸痛三联：心率>80，药量 = 体重×0.85+15ml')
+                            '• 胸痛三联：心率≤80，用量 = 体重×0.8+15ml' : 
+                            '• 胸痛三联：心率>80，用量 = 体重×0.85+15ml')
                     }<br>
-                    • 流速计算：${examType === 'coronary' ? '药量÷12' : '(药量-15)÷12'}<br>
-                    • 安全限制：理论流速>5.0ml/s时，实际执行流速=5.0ml/s，并增加5-10ml造影剂
-                    ${adjustedVolume > 0 ? `<br>• 本次调整：理论流速${theoreticalFlowRate.toFixed(2)}ml/s → 实际执行5.0ml/s，增加${adjustedVolume}ml造影剂` : ''}
+                    • 流速计算：${examType === 'coronary' ? '用量÷12' : '(用量-15)÷12'}<br>
+                    • 安全参考：理论流速>5.0ml/s时，建议执行流速=5.0ml/s
+                    ${adjustedVolume > 0 ? `<br>• 本次调整：理论${theoreticalFlowRate.toFixed(2)}ml/s → 建议执行5.0ml/s，增加${adjustedVolume}ml` : ''}
                 </div>
             `;
             
