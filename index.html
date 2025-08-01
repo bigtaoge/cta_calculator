@@ -11,6 +11,7 @@
             --success-color: #22c55e;
             --warning-color: #f59e0b;
             --error-color: #ef4444;
+            --info-color: #3b82f6;
             --bg-color: #ffffff;
             --text-color: #1e293b;
             --card-bg: #f8fafc;
@@ -24,6 +25,7 @@
             --success-color: #10b981;
             --warning-color: #f59e0b;
             --error-color: #f87171;
+            --info-color: #60a5fa;
             --bg-color: #0f172a;
             --text-color: #e2e8f0;
             --card-bg: #1e293b;
@@ -47,7 +49,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: var(--bg-color);
             border-radius: 20px;
@@ -193,6 +195,45 @@
             color: var(--text-color);
             opacity: 0.6;
             margin-top: 4px;
+        }
+
+        /* 二甲双胍选择的特殊样式 */
+        .metformin-section {
+            border: 2px solid var(--warning-color);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(245, 158, 11, 0.1));
+        }
+
+        .metformin-warning {
+            background: linear-gradient(135deg, #fef3c7, #fed7aa);
+            color: #92400e;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--warning-color);
+            margin-top: 15px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        [data-theme="dark"] .metformin-warning {
+            background: linear-gradient(135deg, #451a03, #7c2d12);
+            color: #fed7aa;
+        }
+
+        .metformin-alert {
+            background: linear-gradient(135deg, #fecaca, #fca5a5);
+            color: #991b1b;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--error-color);
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        [data-theme="dark"] .metformin-alert {
+            background: linear-gradient(135deg, #7f1d1d, #991b1b);
+            color: #fecaca;
         }
 
         .btn {
@@ -423,12 +464,12 @@
                 <span id="theme-text">夜间模式</span>
             </div>
             <h1>影像学术研究计算工具</h1>
-            <div class="subtitle">CTA造影剂用量与BMI学术参考计算</div>
+            <div class="subtitle">CTA造影剂用量与BMI学术参考计算（含二甲双胍评估）</div>
         </div>
         
         <div class="academic-notice">
             <div style="font-weight: 600; margin-bottom: 10px;">📚 学术研究专用工具</div>
-            <div>本工具专为医学影像技术教学、学术研究，不得用于临床诊断或治疗决策。</div>
+            <div>本工具专为医学影像技术教学、学术研究，不得用于临床诊断或治疗决策。已集成二甲双胍用药安全评估功能。</div>
         </div>
         
         <div class="form-section">
@@ -465,7 +506,62 @@
                     </select>
                 </div>
             </div>
+        </div>
+
+        <div class="form-section metformin-section" id="metforminSection">
+            <h2 class="section-title">
+                <span>💊</span>
+                二甲双胍用药评估
+            </h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="metforminStatus">48小时内是否服用二甲双胍？</label>
+                    <select id="metforminStatus" onchange="handleMetforminChange()">
+                        <option value="no">否，未服用</option>
+                        <option value="yes">是，有服用</option>
+                        <option value="unknown">不确定</option>
+                    </select>
+                </div>
+                <div class="form-group" id="metforminDoseGroup" style="display: none;">
+                    <label for="metforminDose">二甲双胍剂量（mg/日）</label>
+                    <select id="metforminDose">
+                        <option value="500">500mg/日</option>
+                        <option value="850">850mg/日</option>
+                        <option value="1000">1000mg/日</option>
+                        <option value="1500">1500mg/日</option>
+                        <option value="2000">2000mg/日</option>
+                        <option value="other">其他剂量</option>
+                    </select>
+                </div>
+            </div>
             
+            <div class="form-row" id="renalFunctionGroup" style="display: none;">
+                <div class="form-group">
+                    <label for="creatinine">血肌酐值 (μmol/L) <span style="color: #ef4444;">*</span></label>
+                    <input type="number" id="creatinine" placeholder="请输入血肌酐值，如：80" min="30" max="500" step="1">
+                    <div class="input-hint">范围：30-500 μmol/L，用于评估肾功能</div>
+                </div>
+                <div class="form-group">
+                    <label for="age">年龄 (岁) <span style="color: #ef4444;">*</span></label>
+                    <input type="number" id="age" placeholder="请输入年龄，如：45" min="18" max="120" step="1">
+                    <div class="input-hint">范围：18-120岁</div>
+                </div>
+            </div>
+
+            <div class="form-row" id="genderGroup" style="display: none;">
+                <div class="form-group">
+                    <label for="gender">性别 <span style="color: #ef4444;">*</span></label>
+                    <select id="gender">
+                        <option value="male">男性</option>
+                        <option value="female">女性</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="metforminInfo"></div>
+        </div>
+        
+        <div class="form-section">
             <button class="btn" onclick="calculate()">
                 <span>🧮</span> 计算参考数值
             </button>
@@ -489,7 +585,8 @@
             <p><span class="highlight">专业背景要求：</span>使用者须是在医学影像科工作的专业人员，熟悉CT检查流程和造影剂使用规范。</p>
             <p><span class="highlight">设备依据：</span>本工具计算公式基于联影CT960+设备的技术参数和临床研究数据。</p>
             <p><span class="highlight">学术用途：</span>仅供影像技术教学、学术研究使用，严禁用于临床诊断或治疗决策。</p>
-            <p><span class="highlight">安全限制：</span>程序已设置造影剂用量和注射流速的安全上限，但实际使用需结合患者具体情况充分评估血管。</p>
+            <p><span class="highlight">二甲双胍评估：</span>集成的二甲双胍-造影剂相互作用评估仅供参考，临床决策需结合完整病史和实验室检查。</p>
+            <p><span class="highlight">安全限制：</span>程序已设置造影剂用量和注射流速的安全上限，但实际使用需结合患者具体情况充分评估血管通路和肾功能。</p>
             <p><span class="highlight">研究价值：</span>根据临床研究数据表明，75kg以下体重患者的造影剂用量优化具有更高的学术研究价值和临床指导意义。</p>
             <p><span class="highlight">风险提示：</span>使用者应充分了解造影剂相关风险，使用本工具产生的任何后果由使用者自行承担。</p>
             <p style="margin-top: 15px; font-weight: 700; color: #b45309; border-top: 1px solid #fed7aa; padding-top: 15px;">
@@ -531,12 +628,116 @@
             }
         });
 
+        // 二甲双胍状态变化处理
+        function handleMetforminChange() {
+            const metforminStatus = document.getElementById('metforminStatus').value;
+            const metforminDoseGroup = document.getElementById('metforminDoseGroup');
+            const renalFunctionGroup = document.getElementById('renalFunctionGroup');
+            const genderGroup = document.getElementById('genderGroup');
+            const metforminInfo = document.getElementById('metforminInfo');
+
+            if (metforminStatus === 'yes') {
+                metforminDoseGroup.style.display = 'block';
+                renalFunctionGroup.style.display = 'block';
+                genderGroup.style.display = 'block';
+                
+                metforminInfo.innerHTML = `
+                    <div class="metformin-warning">
+                        <strong>⚠️ 二甲双胍用药提醒：</strong><br>
+                        • 造影剂可能影响肾功能，增加乳酸酸中毒风险<br>
+                        • 建议造影检查前后48小时暂停二甲双胍<br>
+                        • 需评估患者肾功能(eGFR)决定是否继续用药<br>
+                        • 请输入相关参数以进行风险评估
+                    </div>
+                `;
+            } else if (metforminStatus === 'unknown') {
+                metforminDoseGroup.style.display = 'none';
+                renalFunctionGroup.style.display = 'none';
+                genderGroup.style.display = 'none';
+                
+                metforminInfo.innerHTML = `
+                    <div class="metformin-alert">
+                        <strong>🚨 用药史不明确警告：</strong><br>
+                        • 强烈建议详细询问患者用药史<br>
+                        • 糖尿病患者常规使用二甲双胍<br>
+                        • 如无法确认，建议按服用二甲双胍处理<br>
+                        • 造影前应暂停二甲双胍48小时
+                    </div>
+                `;
+            } else {
+                metforminDoseGroup.style.display = 'none';
+                renalFunctionGroup.style.display = 'none';
+                genderGroup.style.display = 'none';
+                
+                metforminInfo.innerHTML = `
+                    <div class="normal-info">
+                        <strong>✅ 无二甲双胍用药风险：</strong><br>
+                        患者未服用二甲双胍，无需考虑二甲双胍-造影剂相互作用风险。
+                    </div>
+                `;
+            }
+        }
+
+        // 计算eGFR (CKD-EPI公式)
+        function calculateEGFR(creatinine, age, gender) {
+            const creatinineMgDl = creatinine / 88.4; // 转换为mg/dL
+            let eGFR;
+            
+            if (gender === 'female') {
+                if (creatinineMgDl <= 0.7) {
+                    eGFR = 144 * Math.pow(creatinineMgDl / 0.7, -0.329) * Math.pow(0.993, age);
+                } else {
+                    eGFR = 144 * Math.pow(creatinineMgDl / 0.7, -1.209) * Math.pow(0.993, age);
+                }
+            } else {
+                if (creatinineMgDl <= 0.9) {
+                    eGFR = 141 * Math.pow(creatinineMgDl / 0.9, -0.411) * Math.pow(0.993, age);
+                } else {
+                    eGFR = 141 * Math.pow(creatinineMgDl / 0.9, -1.209) * Math.pow(0.993, age);
+                }
+            }
+            
+            return Math.round(eGFR);
+        }
+
+        // 评估二甲双胍风险
+        function assessMetforminRisk(eGFR, dose) {
+            let riskLevel = 'low';
+            let recommendations = [];
+            
+            if (eGFR >= 60) {
+                riskLevel = 'low';
+                recommendations.push('肾功能正常，造影前后暂停二甲双胍48小时');
+                recommendations.push('造影后监测肾功能，无异常可恢复用药');
+            } else if (eGFR >= 45) {
+                riskLevel = 'moderate';
+                recommendations.push('轻度肾功能不全，需谨慎评估');
+                recommendations.push('造影前后暂停二甲双胍48-72小时');
+                recommendations.push('造影后72小时复查肾功能');
+            } else if (eGFR >= 30) {
+                riskLevel = 'high';
+                recommendations.push('中度肾功能不全，高风险');
+                recommendations.push('造影前后暂停二甲双胍72小时');
+                recommendations.push('考虑减少造影剂用量');
+                recommendations.push('充分水化，密切监测肾功能');
+            } else {
+                riskLevel = 'very-high';
+                recommendations.push('重度肾功能不全，极高风险');
+                recommendations.push('强烈建议避免使用造影剂');
+                recommendations.push('如必须检查，需内分泌科会诊');
+                recommendations.push('考虑替代检查方法');
+            }
+            
+            return { riskLevel, recommendations };
+        }
+
         // 计算函数
         function calculate() {
             const height = parseFloat(document.getElementById('height').value);
             const weight = parseFloat(document.getElementById('weight').value);
             const heartRate = parseInt(document.getElementById('heartRate').value);
             const examType = document.getElementById('examType').value;
+            const metforminStatus = document.getElementById('metforminStatus').value;
 
             // 输入验证
             if (!height || !weight) {
@@ -552,6 +753,36 @@
             if (weight < 20 || weight > 200) {
                 alert('⚠️ 体重范围应在20-200kg之间');
                 return;
+            }
+
+            // 二甲双胍相关验证
+            let metforminRisk = null;
+            if (metforminStatus === 'yes') {
+                const creatinine = parseFloat(document.getElementById('creatinine').value);
+                const age = parseInt(document.getElementById('age').value);
+                const gender = document.getElementById('gender').value;
+                const dose = document.getElementById('metforminDose').value;
+
+                if (!creatinine || !age) {
+                    alert('⚠️ 服用二甲双胍患者需填写血肌酐值和年龄信息');
+                    return;
+                }
+
+                if (creatinine < 30 || creatinine > 500) {
+                    alert('⚠️ 血肌酐值范围应在30-500 μmol/L之间');
+                    return;
+                }
+
+                if (age < 18 || age > 120) {
+                    alert('⚠️ 年龄范围应在18-120岁之间');
+                    return;
+                }
+
+                // 计算eGFR和风险评估
+                const eGFR = calculateEGFR(creatinine, age, gender);
+                metforminRisk = assessMetforminRisk(eGFR, dose);
+                metforminRisk.eGFR = eGFR;
+                metforminRisk.creatinine = creatinine;
             }
 
             // 计算BMI
@@ -577,6 +808,15 @@
                     contrastVolume = weight * 0.85 + 15;
                 }
                 maxVolume = 75; // 胸痛三联最大用量75ml
+            }
+
+            // 二甲双胍患者的造影剂用量调整
+            let contrastAdjustment = '';
+            if (metforminRisk && metforminRisk.eGFR < 60) {
+                const reductionFactor = metforminRisk.eGFR < 45 ? 0.8 : 0.9;
+                const originalVolume = contrastVolume;
+                contrastVolume = contrastVolume * reductionFactor;
+                contrastAdjustment = `肾功能不全调整：原计算量 ${originalVolume.toFixed(1)}ml → 调整后 ${contrastVolume.toFixed(1)}ml`;
             }
 
             // 应用最大用量限制
@@ -605,11 +845,13 @@
 
             // 显示结果
             displayResults(height, weight, heartRate, bmi, contrastVolume, flowRate, examType, 
-                          isVolumeExceeded, originalVolume, isFlowRateExceeded, originalFlowRate, maxVolume);
+                          isVolumeExceeded, originalVolume, isFlowRateExceeded, originalFlowRate, maxVolume,
+                          metforminStatus, metforminRisk, contrastAdjustment);
         }
 
         function displayResults(height, weight, heartRate, bmi, contrastVolume, flowRate, examType, 
-                              isVolumeExceeded, originalVolume, isFlowRateExceeded, originalFlowRate, maxVolume) {
+                              isVolumeExceeded, originalVolume, isFlowRateExceeded, originalFlowRate, maxVolume,
+                              metforminStatus, metforminRisk, contrastAdjustment) {
             const resultsDiv = document.getElementById('results');
             const resultsContent = document.getElementById('calculationResults');
             
@@ -634,6 +876,84 @@
             const examTypeText = examType === 'coronary' ? '冠脉CTA' : '胸痛三联';
             const heartRateText = heartRate <= 80 ? '≤80 次/分' : '>80 次/分';
             
+            // 二甲双胍状态显示
+            let metforminStatusText = '';
+            switch(metforminStatus) {
+                case 'yes':
+                    metforminStatusText = '是，有服用';
+                    break;
+                case 'no':
+                    metforminStatusText = '否，未服用';
+                    break;
+                case 'unknown':
+                    metforminStatusText = '不确定';
+                    break;
+            }
+
+            // 二甲双胍风险评估结果
+            let metforminAssessment = '';
+            if (metforminRisk) {
+                let riskColor = '';
+                let riskText = '';
+                
+                switch(metforminRisk.riskLevel) {
+                    case 'low':
+                        riskColor = '#22c55e';
+                        riskText = '低风险';
+                        break;
+                    case 'moderate':
+                        riskColor = '#f59e0b';
+                        riskText = '中等风险';
+                        break;
+                    case 'high':
+                        riskColor = '#ef4444';
+                        riskText = '高风险';
+                        break;
+                    case 'very-high':
+                        riskColor = '#dc2626';
+                        riskText = '极高风险';
+                        break;
+                }
+
+                metforminAssessment = `
+                    <div class="result-item">
+                        <span class="result-label">🧪 血肌酐值</span>
+                        <span class="result-value">${metforminRisk.creatinine} μmol/L</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">🔬 eGFR</span>
+                        <span class="result-value">${metforminRisk.eGFR} ml/min/1.73m²</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">⚠️ 二甲双胍风险</span>
+                        <span class="result-value" style="color: ${riskColor};">${riskText}</span>
+                    </div>
+                    
+                    <div class="${metforminRisk.riskLevel === 'low' ? 'normal-info' : 'metformin-alert'}">
+                        <strong>🏥 二甲双胍处理建议：</strong><br>
+                        ${metforminRisk.recommendations.map(rec => `• ${rec}`).join('<br>')}
+                    </div>
+                `;
+            } else if (metforminStatus === 'unknown') {
+                metforminAssessment = `
+                    <div class="metformin-alert">
+                        <strong>🚨 用药史不明确 - 按高风险处理：</strong><br>
+                        • 强烈建议详细询问患者糖尿病用药史<br>
+                        • 如无法确认，建议造影前48小时停用所有降糖药<br>
+                        • 必要时内分泌科会诊
+                    </div>
+                `;
+            } else {
+                metforminAssessment = `
+                    <div class="normal-info">
+                        <strong>✅ 无二甲双胍相关风险</strong><br>
+                        患者未服用二甲双胍，可按标准流程进行造影检查。
+                    </div>
+                `;
+            }
+            
             // 限制提示
             let limitWarning = '';
             if (isVolumeExceeded) {
@@ -657,9 +977,19 @@
                     </div>
                 `;
             }
+
+            if (contrastAdjustment) {
+                limitWarning += `
+                    <div class="limit-warning">
+                        <strong>🩺 肾功能调整提示：</strong><br>
+                        ${contrastAdjustment}<br>
+                        <strong>原因：</strong>肾功能不全患者减少造影剂用量以降低肾毒性风险。
+                    </div>
+                `;
+            }
             
             resultsContent.innerHTML = `
-                <div class="calc-type">计算模式：${examTypeText} | 心率：${heartRateText}</div>
+                <div class="calc-type">计算模式：${examTypeText} | 心率：${heartRateText} | 二甲双胍：${metforminStatusText}</div>
                 
                 <div class="result-item">
                     <span class="result-label">📏 身高</span>
@@ -683,6 +1013,8 @@
                       bmi < 28 ? '(建议控制体重)' : 
                       '(建议减重并关注相关疾病风险)'}
                 </div>
+                
+                ${metforminAssessment}
                 
                 <div class="result-item">
                     <span class="result-label">💉 造影剂用量</span>
@@ -713,6 +1045,7 @@
                     }<br>
                     <strong>注射流速：</strong>${examType === 'coronary' ? '用量÷12s' : '(用量-15ml)÷12s'}<br>
                     <strong>安全限制：</strong>${examType === 'coronary' ? '冠脉CTA最大60ml' : '胸痛三联最大75ml'}，流速最大5.0ml/s<br>
+                    <strong>eGFR计算：</strong>采用CKD-EPI公式（2009版）<br>
                     <strong>设备依据：</strong>联影CT960+设备技术参数
                 </div>
             `;
@@ -732,6 +1065,16 @@
             if (this.value > 200) this.value = '200';
         });
 
+        document.getElementById('creatinine').addEventListener('input', function() {
+            if (this.value < 0) this.value = '';
+            if (this.value > 500) this.value = '500';
+        });
+
+        document.getElementById('age').addEventListener('input', function() {
+            if (this.value < 0) this.value = '';
+            if (this.value > 120) this.value = '120';
+        });
+
         // 回车键计算
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -744,9 +1087,11 @@
             const examType = this.value;
             const maxVolume = examType === 'coronary' ? '60ml' : '75ml';
             
-            // 可以在这里添加动态提示
             console.log(`已切换到${examType === 'coronary' ? '冠脉CTA' : '胸痛三联'}模式，最大用量：${maxVolume}`);
         });
+
+        // 初始化二甲双胍提示
+        handleMetforminChange();
     </script>
 </body>
 </html>
