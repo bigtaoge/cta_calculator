@@ -1564,10 +1564,6 @@ eGFR计算：采用2021版CKD-EPI公式，直接使用μmol/L单位计算
                 
                 updateProgress();
                 
-                setTimeout(() => {
-                    showNotification('✅ v2.1工具初始化完成，eGFR计算已优化', 'success');
-                }, 500);
-                
             } catch (error) {
                 console.error('页面初始化出错:', error);
                 alert('⚠️ 页面初始化过程中出现问题，部分功能可能无法正常使用');
