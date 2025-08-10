@@ -521,10 +521,142 @@
             .form-row { grid-template-columns: 1fr; gap: 15px; }
             .theme-toggle { position: relative; margin-bottom: 20px; }
             .btn-group { flex-direction: column; }
-            .digit { width: 40px; height: 70px; }
-            .digits-container { gap: 6px; }
-            .clock-colon { font-size: 1.8rem; margin: 0 4px; }
-            .clock-container { padding: 15px; margin: 15px 0; }
+            
+            /* 移动端电子钟优化 */
+            .clock-container {
+                padding: 25px 15px;
+                margin: 25px 0;
+                border-radius: 20px;
+            }
+            
+            .digits-container {
+                gap: 10px;
+                transform: scale(1.1);
+            }
+            
+            .digit {
+                width: 55px;
+                height: 90px;
+                border-radius: 10px;
+                padding: 10px;
+                box-shadow: 
+                    0 4px 12px rgba(0, 0, 0, 0.15),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.8),
+                    inset 0 -2px 3px rgba(0, 0, 0, 0.05);
+            }
+            
+            .digit:hover {
+                transform: translateY(-2px);
+            }
+            
+            /* 移动端段更粗更清晰 */
+            .segment-a, .segment-d, .segment-g {
+                width: 35px;
+                height: 6px;
+                left: 10px;
+            }
+            
+            .segment-b, .segment-c, .segment-e, .segment-f {
+                width: 6px;
+                height: 32px;
+            }
+            
+            .segment-b, .segment-c {
+                right: 10px;
+            }
+            
+            .segment-e, .segment-f {
+                left: 10px;
+            }
+            
+            .segment-a { top: 10px; }
+            .segment-d { bottom: 10px; }
+            .segment-g { top: 50%; transform: translateY(-50%); }
+            .segment-b { top: 14px; }
+            .segment-c { bottom: 14px; }
+            .segment-e { bottom: 14px; }
+            .segment-f { top: 14px; }
+            
+            .clock-colon {
+                font-size: 2.2rem;
+                margin: 0 6px;
+                font-weight: 900;
+            }
+            
+            .clock-label {
+                font-size: 14px;
+                margin-top: 15px;
+                font-weight: 600;
+            }
+        }
+
+        /* 平板端优化 */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .digit {
+                width: 70px;
+                height: 110px;
+            }
+            
+            .digits-container {
+                gap: 15px;
+            }
+            
+            .clock-colon {
+                font-size: 3rem;
+                margin: 0 10px;
+            }
+            
+            .clock-container {
+                padding: 30px;
+            }
+        }
+
+        /* 超小屏幕优化 */
+        @media (max-width: 480px) {
+            .clock-container {
+                padding: 20px 10px;
+                margin: 20px 0;
+            }
+            
+            .digits-container {
+                gap: 8px;
+                transform: scale(1);
+            }
+            
+            .digit {
+                width: 50px;
+                height: 80px;
+                padding: 8px;
+            }
+            
+            /* 超小屏段尺寸 */
+            .segment-a, .segment-d, .segment-g {
+                width: 30px;
+                height: 5px;
+                left: 9px;
+            }
+            
+            .segment-b, .segment-c, .segment-e, .segment-f {
+                width: 5px;
+                height: 28px;
+            }
+            
+            .segment-b, .segment-c {
+                right: 9px;
+            }
+            
+            .segment-e, .segment-f {
+                left: 9px;
+            }
+            
+            .clock-colon {
+                font-size: 2rem;
+                margin: 0 4px;
+            }
+            
+            .clock-label {
+                font-size: 12px;
+            }
         }
 
         /* 暗色主题下的电子钟样式 */
