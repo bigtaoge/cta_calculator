@@ -97,6 +97,142 @@
             margin-bottom: 20px;
         }
 
+        .developer-info {
+            margin: 15px 0;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* 简洁电子钟样式 */
+        .clock-container {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 
+                0 8px 32px rgba(79, 70, 229, 0.1),
+                inset 0 1px 3px rgba(255, 255, 255, 0.8),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clock-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), #22c55e, var(--primary));
+            border-radius: 16px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            z-index: -1;
+            animation: borderGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes borderGlow {
+            0% { opacity: 0.6; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.02); }
+        }
+
+        .clock-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(79, 70, 229, 0.15),
+                inset 0 1px 3px rgba(255, 255, 255, 0.9),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .digits-container {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .digit-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .digit {
+            position: relative;
+            width: 60px;
+            height: 100px;
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 2px rgba(255, 255, 255, 0.8),
+                inset 0 -1px 1px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(79, 70, 229, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .digit:hover {
+            transform: translateY(-1px);
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.15),
+                inset 0 1px 2px rgba(255, 255, 255, 0.9),
+                inset 0 -1px 1px rgba(0, 0, 0, 0.05);
+        }
+
+        .segment {
+            position: absolute;
+            background: transparent;
+            border-radius: 3px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .segment.active {
+            background: #333333;
+            box-shadow: 
+                0 0 4px rgba(51, 51, 51, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        /* 水平段 */
+        .segment-a { top: 8px; left: 12px; width: 36px; height: 8px; }
+        .segment-d { bottom: 8px; left: 12px; width: 36px; height: 8px; }
+        .segment-g { top: 50%; left: 12px; width: 36px; height: 8px; transform: translateY(-50%); }
+
+        /* 垂直段 */
+        .segment-b { top: 12px; right: 8px; width: 8px; height: 36px; }
+        .segment-c { bottom: 12px; right: 8px; width: 8px; height: 36px; }
+        .segment-e { bottom: 12px; left: 8px; width: 8px; height: 36px; }
+        .segment-f { top: 12px; left: 8px; width: 8px; height: 36px; }
+
+        .clock-colon {
+            font-size: 2.5rem;
+            color: #333333;
+            margin: 0 8px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(51, 51, 51, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .clock-label {
+            font-size: 13px;
+            color: var(--primary);
+            text-align: center;
+            margin-top: 12px;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
         .form-section {
             background: var(--card);
             padding: 25px;
@@ -385,12 +521,44 @@
             .form-row { grid-template-columns: 1fr; gap: 15px; }
             .theme-toggle { position: relative; margin-bottom: 20px; }
             .btn-group { flex-direction: column; }
+            .digit { width: 40px; height: 70px; }
+            .digits-container { gap: 6px; }
+            .clock-colon { font-size: 1.8rem; margin: 0 4px; }
+            .clock-container { padding: 15px; margin: 15px 0; }
+        }
+
+        /* 暗色主题下的电子钟样式 */
+        [data-theme="dark"] .clock-container {
+            background: linear-gradient(145deg, #1e293b, #334155);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 3px rgba(255, 255, 255, 0.1),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="dark"] .digit {
+            background: linear-gradient(145deg, #334155, #475569);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 2px rgba(255, 255, 255, 0.1),
+                inset 0 -1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="dark"] .clock-colon {
+            color: #333333;
+            text-shadow: 0 0 6px rgba(51, 51, 51, 0.5);
+        }
+
+        [data-theme="dark"] .segment.active {
+            background: #333333;
+            box-shadow: 0 0 6px rgba(51, 51, 51, 0.4);
         }
 
         @media print {
             body { background: white; color: black; }
             .container { background: white; box-shadow: none; }
-            .btn, .theme-toggle { display: none; }
+            .btn, .theme-toggle, .clock-container { display: none; }
             .no-print { display: none; }
         }
     </style>
@@ -405,9 +573,82 @@
             </div>
             <h1>影像学术研究计算工具</h1>
             <div class="subtitle">CTA造影剂用量与BMI学术参考计算（含二甲双胍评估）v2.1</div>
-            <div style="margin-top: 15px; padding: 8px 16px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 20px; font-size: 14px; font-weight: 600; display: inline-block;">
+            <div class="developer-info">
                 💻 程序开发者：影像涛哥
             </div>
+            
+            <!-- 简洁电子钟 -->
+            <div class="clock-container">
+                <div class="digits-container">
+                    <div class="digit-group">
+                        <div class="digit" id="hour-tens">
+                            <div class="segment segment-a"></div>
+                            <div class="segment segment-b"></div>
+                            <div class="segment segment-c"></div>
+                            <div class="segment segment-d"></div>
+                            <div class="segment segment-e"></div>
+                            <div class="segment segment-f"></div>
+                            <div class="segment segment-g"></div>
+                        </div>
+                        <div class="digit" id="hour-ones">
+                            <div class="segment segment-a"></div>
+                            <div class="segment segment-b"></div>
+                            <div class="segment segment-c"></div>
+                            <div class="segment segment-d"></div>
+                            <div class="segment segment-e"></div>
+                            <div class="segment segment-f"></div>
+                            <div class="segment segment-g"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="clock-colon">:</div>
+                    
+                    <div class="digit-group">
+                        <div class="digit" id="min-tens">
+                            <div class="segment segment-a"></div>
+                            <div class="segment segment-b"></div>
+                            <div class="segment segment-c"></div>
+                            <div class="segment segment-d"></div>
+                            <div class="segment segment-e"></div>
+                            <div class="segment segment-f"></div>
+                            <div class="segment segment-g"></div>
+                        </div>
+                        <div class="digit" id="min-ones">
+                            <div class="segment segment-a"></div>
+                            <div class="segment segment-b"></div>
+                            <div class="segment segment-c"></div>
+                            <div class="segment segment-d"></div>
+                            <div class="segment segment-e"></div>
+                            <div class="segment segment-f"></div>
+                            <div class="segment segment-g"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="clock-colon">:</div>
+                    
+                    <div class="digit-group">
+                        <div class="digit" id="sec-tens">
+                            <div class="segment segment-a"></div>
+                            <div class="segment segment-b"></div>
+                            <div class="segment segment-c"></div>
+                            <div class="segment segment-d"></div>
+                            <div class="segment segment-e"></div>
+                            <div class="segment segment-f"></div>
+                            <div class="segment segment-g"></div>
+                        </div>
+                        <div class="digit" id="sec-ones">
+                            <div class="segment segment-a"></div>
+                            <div class="segment segment-b"></div>
+                            <div class="segment segment-c"></div>
+                            <div class="segment segment-d"></div>
+                            <div class="segment segment-e"></div>
+                            <div class="segment segment-f"></div>
+                            <div class="segment segment-g"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clock-label">当前时间</div>
         </div>
         
         <div class="form-section">
@@ -550,11 +791,82 @@
     </div>
 
     <script>
+        // 7段数码管数字配置（a-g段）
+        const digitConfig = {
+            '0': [1, 1, 1, 1, 1, 1, 0],
+            '1': [0, 1, 1, 0, 0, 0, 0],
+            '2': [1, 1, 0, 1, 1, 0, 1],
+            '3': [1, 1, 1, 1, 0, 0, 1],
+            '4': [0, 1, 1, 0, 0, 1, 1],
+            '5': [1, 0, 1, 1, 0, 1, 1],
+            '6': [1, 0, 1, 1, 1, 1, 1],
+            '7': [1, 1, 1, 0, 0, 0, 0],
+            '8': [1, 1, 1, 1, 1, 1, 1],
+            '9': [1, 1, 1, 1, 0, 1, 1]
+        };
+
         // 全局状态管理
         const appState = {
             isDarkMode: false,
             currentResults: null
         };
+
+        // 电子钟相关函数
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            // 格式化时间各部分
+            const hoursStr = hours.toString().padStart(2, '0');
+            const minutesStr = minutes.toString().padStart(2, '0');
+            const secondsStr = seconds.toString().padStart(2, '0');
+
+            // 更新数码管显示
+            displayDigit(document.getElementById('hour-tens'), hoursStr[0]);
+            displayDigit(document.getElementById('hour-ones'), hoursStr[1]);
+            displayDigit(document.getElementById('min-tens'), minutesStr[0]);
+            displayDigit(document.getElementById('min-ones'), minutesStr[1]);
+            displayDigit(document.getElementById('sec-tens'), secondsStr[0]);
+            displayDigit(document.getElementById('sec-ones'), secondsStr[1]);
+
+            // 更新冒号颜色
+            const colons = document.querySelectorAll('.clock-colon');
+            colons.forEach(colon => {
+                if (appState.isDarkMode) {
+                    colon.style.color = '#ffffff';
+                    colon.style.textShadow = '0 0 8px rgba(255, 255, 255, 0.4)';
+                } else {
+                    colon.style.color = '#333333';
+                    colon.style.textShadow = '0 2px 4px rgba(51, 51, 51, 0.2)';
+                }
+            });
+        }
+
+        // 显示数字到7段数码管
+        function displayDigit(digitElement, number) {
+            const segments = digitElement.querySelectorAll('.segment');
+            const config = digitConfig[number] || digitConfig['0'];
+
+            segments.forEach((segment, index) => {
+                if (config[index] === 1) {
+                    segment.classList.add('active');
+                    // 根据当前主题设置颜色
+                    if (appState.isDarkMode) {
+                        segment.style.backgroundColor = '#ffffff';
+                        segment.style.boxShadow = '0 0 8px rgba(255, 255, 255, 0.4)';
+                    } else {
+                        segment.style.backgroundColor = '#333333';
+                        segment.style.boxShadow = '0 0 4px rgba(51, 51, 51, 0.3)';
+                    }
+                } else {
+                    segment.classList.remove('active');
+                    segment.style.backgroundColor = 'transparent';
+                    segment.style.boxShadow = 'none';
+                }
+            });
+        }
 
         // 主题切换功能
         function toggleTheme() {
@@ -568,14 +880,48 @@
                     body.setAttribute('data-theme', 'dark');
                     if (themeIcon) themeIcon.textContent = '☀️';
                     if (themeText) themeText.textContent = '日间模式';
+                    
+                    // 设置暗色主题下的电子钟颜色
+                    updateClockTheme('dark');
                 } else {
                     body.removeAttribute('data-theme');
                     if (themeIcon) themeIcon.textContent = '🌙';
                     if (themeText) themeText.textContent = '夜间模式';
+                    
+                    // 设置日间主题下的电子钟颜色
+                    updateClockTheme('light');
                 }
             } catch (error) {
                 console.error('主题切换出错:', error);
                 showNotification('⚠️ 主题切换失败', 'warning');
+            }
+        }
+
+        // 更新电子钟主题颜色
+        function updateClockTheme(theme) {
+            const activeSegments = document.querySelectorAll('.segment.active');
+            const colons = document.querySelectorAll('.clock-colon');
+            
+            if (theme === 'dark') {
+                // 暗色主题：白色数字
+                activeSegments.forEach(segment => {
+                    segment.style.backgroundColor = '#ffffff';
+                    segment.style.boxShadow = '0 0 8px rgba(255, 255, 255, 0.4)';
+                });
+                colons.forEach(colon => {
+                    colon.style.color = '#ffffff';
+                    colon.style.textShadow = '0 0 8px rgba(255, 255, 255, 0.4)';
+                });
+            } else {
+                // 日间主题：黑色数字
+                activeSegments.forEach(segment => {
+                    segment.style.backgroundColor = '#333333';
+                    segment.style.boxShadow = '0 0 4px rgba(51, 51, 51, 0.3)';
+                });
+                colons.forEach(colon => {
+                    colon.style.color = '#333333';
+                    colon.style.textShadow = '0 2px 4px rgba(51, 51, 51, 0.2)';
+                });
             }
         }
 
@@ -1553,6 +1899,13 @@ eGFR计算：采用2021版CKD-EPI公式，直接使用μmol/L单位计算
         // 页面初始化
         document.addEventListener('DOMContentLoaded', function() {
             try {
+                // 初始化电子钟
+                updateClock();
+                setInterval(updateClock, 1000); // 每秒更新一次
+                
+                // 初始化电子钟主题颜色
+                updateClockTheme('light');
+                
                 setupRealTimeValidation();
                 handleMetforminChange();
                 
