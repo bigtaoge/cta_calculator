@@ -1717,9 +1717,11 @@
             }
         }
 
-        // 生成PDF优化的HTML内容
+        // 生成PDF优化的HTML内容（修改文件名）
         function generatePDFContent(results) {
             const currentDate = new Date().toLocaleString();
+            const reportId = Date.now().toString(36).toUpperCase(); // 生成短格式编号
+            const reportNumber = `${new Date().getFullYear()}${(new Date().getMonth() + 1).toString().padStart(2, '0')}${new Date().getDate().toString().padStart(2, '0')}_${reportId}`;
             
             let bmiStatus = '';
             if (results.bmi < 18.5) bmiStatus = '偏瘦';
@@ -1800,7 +1802,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>影像学术研究计算报告 v2.1</title>
+    <title>影像学术研究计算结果_${reportNumber}</title>
     <style>
         @page { size: A4; margin: 1.5cm; }
         body { font-family: 'Microsoft YaHei', 'SimSun', sans-serif; line-height: 1.4; color: #333; max-width: 800px; margin: 0 auto; padding: 10px; font-size: 13px; }
@@ -1831,7 +1833,8 @@
         <h1>影像学术研究计算结果</h1>
         <div class="subtitle">CTA造影剂用量与BMI学术参考计算（含二甲双胍评估）v2.1</div>
         <div class="time-info">
-            计算时间：${results.timestamp.toLocaleString()} | 结果生成时间：${currentDate}
+            计算时间：${results.timestamp.toLocaleString()} | 结果生成时间：${currentDate}<br>
+            报告编号：${reportNumber}
         </div>
     </div>
     
@@ -1885,17 +1888,20 @@
     
     <div class="footer">
         <p><strong>重要声明：</strong>本结果仅供学术研究参考，严禁用于临床诊断或治疗决策</p>
-        <p>工具版本：v2.1 | 开发者：影像涛哥 | 结果编号：${Date.now()}</p>
+        <p>工具版本：v2.1 | 开发者：影像涛哥 | 报告编号：${reportNumber}</p>
     </div>
 </body>
 </html>`;
         }
 
-        // 生成文本格式报告
+        // 生成文本格式报告（同步修改文件名）
         function generateTextReport() {
             if (!appState.currentResults) return;
             
             const results = appState.currentResults;
+            const reportId = Date.now().toString(36).toUpperCase();
+            const reportNumber = `${new Date().getFullYear()}${(new Date().getMonth() + 1).toString().padStart(2, '0')}${new Date().getDate().toString().padStart(2, '0')}_${reportId}`;
+            
             let bmiStatus = '';
             if (results.bmi < 18.5) bmiStatus = '偏瘦';
             else if (results.bmi < 24) bmiStatus = '正常';
@@ -1943,6 +1949,7 @@ ${risk.recommendations.map(rec => `• ${rec}`).join('\n')}
 
 计算时间：${results.timestamp.toLocaleString()}
 结果生成时间：${new Date().toLocaleString()}
+报告编号：${reportNumber}
 
 患者基本信息
 -----------
@@ -1980,13 +1987,13 @@ eGFR公式：2021版CKD-EPI肾小球滤过率方程（无种族系数，直接�
 本结果仅供学术研究参考，严禁用于临床诊断或治疗决策
 工具版本：v2.1 | 开发者：影像涛哥
 eGFR计算：采用2021版CKD-EPI公式，直接使用μmol/L单位计算
-结果编号：${Date.now()}`;
+报告编号：${reportNumber}`;
             
             const dataBlob = new Blob([reportText], {type: 'text/plain;charset=utf-8'});
             const url = URL.createObjectURL(dataBlob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `影像计算结果_v2.1_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.txt`;
+            link.download = `影像学术研究计算结果_${reportNumber}.txt`;
             
             link.addEventListener('click', function() {
                 setTimeout(() => URL.revokeObjectURL(url), 100);
