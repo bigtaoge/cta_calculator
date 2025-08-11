@@ -1834,7 +1834,7 @@
         <div class="subtitle">CTA造影剂用量与BMI学术参考计算（含二甲双胍评估）v2.1</div>
         <div class="time-info">
             计算时间：${results.timestamp.toLocaleString()} | 结果生成时间：${currentDate}<br>
-            报告编号：${reportNumber}
+            结果编号：${reportNumber}
         </div>
     </div>
     
@@ -1888,7 +1888,7 @@
     
     <div class="footer">
         <p><strong>重要声明：</strong>本结果仅供学术研究参考，严禁用于临床诊断或治疗决策</p>
-        <p>工具版本：v2.1 | 开发者：影像涛哥 | 报告编号：${reportNumber}</p>
+        <p>工具版本：v2.1 | 开发者：影像涛哥 | 结果编号：${reportNumber}</p>
     </div>
 </body>
 </html>`;
@@ -1949,7 +1949,7 @@ ${risk.recommendations.map(rec => `• ${rec}`).join('\n')}
 
 计算时间：${results.timestamp.toLocaleString()}
 结果生成时间：${new Date().toLocaleString()}
-报告编号：${reportNumber}
+结果编号：${reportNumber}
 
 患者基本信息
 -----------
@@ -1987,7 +1987,7 @@ eGFR公式：2021版CKD-EPI肾小球滤过率方程（无种族系数，直接�
 本结果仅供学术研究参考，严禁用于临床诊断或治疗决策
 工具版本：v2.1 | 开发者：影像涛哥
 eGFR计算：采用2021版CKD-EPI公式，直接使用μmol/L单位计算
-报告编号：${reportNumber}`;
+结果编号：${reportNumber}`;
             
             const dataBlob = new Blob([reportText], {type: 'text/plain;charset=utf-8'});
             const url = URL.createObjectURL(dataBlob);
